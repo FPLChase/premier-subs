@@ -1,0 +1,59 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import warnings
+
+warnings.filterwarnings("ignore")
+pd.set_option('display.max_columns', 50)
+pd.set_option('display.max_rows', 50)
+
+
+#THIS IS DATAFRAME PART
+
+#columns = ["time_in_seconds", "team_short"]
+#df = pd.read_csv("combined.csv", usecols=columns)
+
+df = pd.read_csv('https://raw.githubusercontent.com/jonnycurrie/premier-subs/main/2022-2023/combined.csv')
+df['sub_time'] = np.ceil(df['time_in_seconds']/60)
+df.sort_values(by='team_short',inplace=True)
+
+
+#THIS IS VIZ PART
+
+#sns.set_style("whitegrid")
+sns.set_style('ticks',{"grid.linestyle": ""})
+
+x="sub_time"
+y="team_short"
+
+
+g = sns.FacetGrid(df,col=y,
+                  sharex=False,
+                  sharey=True,
+                  col_wrap=4,
+                  height=2.2,
+                  aspect=1
+                 )
+
+g.map_dataframe(sns.swarmplot,
+            x=x,
+            color='purple',
+            edgecolor='white', 
+            linewidth=1,
+            size=7)
+
+g.set(xlim=(0, 95),xlabel=None,ylabel=None)
+
+for ax in g.axes.flat:
+    if ax.get_title():
+        ax.set_title(ax.get_title().split('=')[1],
+                     fontsize='12', fontweight='bold')
+
+plt.suptitle('PL Substitution Times 2022/23', fontsize=16, fontweight='bold', x=0.5, y=1.04)
+
+plt.subplots_adjust(hspace=0.5, wspace=0.2) 
+
+plt.show()
