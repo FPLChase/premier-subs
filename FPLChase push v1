@@ -48,6 +48,8 @@ g.map_dataframe(sns.swarmplot,
 g.set(xlim=(0, 95),xlabel=None,ylabel=None)
 
 for ax in g.axes.flat:
+    ax.get_yaxis().set_visible(False)
+    ax.spines['left'].set_color('white')
     if ax.get_title():
         ax.set_title(ax.get_title().split('=')[1],
                      fontsize='12', fontweight='bold')
